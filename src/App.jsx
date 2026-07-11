@@ -62,7 +62,7 @@ export default function UnionShoppingApp() {
 
     try {
       // IMPORTANT: Paste your actual SheetDB API URL with ?sheet=Sheet2 inside the quotes!
-      const response = await fetch('YOUR_SHEETDB_API_URL_HERE?sheet=Sheet2', {
+      const response = await fetch('https://sheetdb.io/api/v1/wo4xfh7hnwh32?sheet=Sheet2', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
