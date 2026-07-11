@@ -10,7 +10,6 @@ const CURRENT_ITEMS = [
   "SOY SAUCE", "SYRUP"
 ];
 
-// Rotating color palette for the supply item boxes to improve readability
 const CARD_COLORS = [
   'bg-blue-50 border-blue-200',
   'bg-emerald-50 border-emerald-200',
@@ -21,7 +20,8 @@ const CARD_COLORS = [
 ];
 
 export default function UnionShoppingApp() {
-  const [view, setView] = useState('vote');
+  // Set the default view to 'instructions' so it loads first
+  const [view, setView] = useState('instructions'); 
   
   const [userName, setUserName] = useState('');
   const [votes, setVotes] = useState({});
@@ -62,7 +62,7 @@ export default function UnionShoppingApp() {
 
     try {
       // IMPORTANT: Paste your actual SheetDB API URL with ?sheet=Sheet2 inside the quotes!
-      const response = await fetch('https://sheetdb.io/api/v1/wo4xfh7hnwh32?sheet=Sheet2', {
+      const response = await fetch('YOUR_SHEETDB_API_URL_HERE?sheet=Sheet2', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -119,18 +119,51 @@ export default function UnionShoppingApp() {
         {/* Navigation */}
         <div className="flex border-b bg-gray-50">
           <button 
+            onClick={() => setView('instructions')}
+            className={`flex-1 py-4 text-center font-extrabold text-sm sm:text-lg transition-colors ${view === 'instructions' ? 'bg-slate-800 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+          >
+            Instructions
+          </button>
+          <button 
             onClick={() => setView('vote')}
-            className={`flex-1 py-4 text-center font-extrabold text-lg transition-colors ${view === 'vote' ? 'bg-slate-800 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`flex-1 py-4 text-center font-extrabold text-sm sm:text-lg transition-colors ${view === 'vote' ? 'bg-slate-800 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Submit Ballot
           </button>
           <button 
             onClick={() => setView('results')}
-            className={`flex-1 py-4 text-center font-extrabold text-lg transition-colors ${view === 'results' ? 'bg-slate-800 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`flex-1 py-4 text-center font-extrabold text-sm sm:text-lg transition-colors ${view === 'results' ? 'bg-slate-800 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
-            Compiled Results
+            Results
           </button>
         </div>
+
+        {/* --- VIEW: INSTRUCTIONS (README) --- */}
+        {view === 'instructions' && (
+          <div className="p-4 sm:p-8 space-y-6 text-slate-700">
+            <h2 className="text-3xl font-black mb-2 text-slate-800 tracking-tight">Welcome to the Union Supply Review</h2>
+            <p className="text-lg text-slate-600 mb-6">
+              Please read the instructions below before submitting your choices for our upcoming meeting.
+            </p>
+
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-xl shadow-sm mb-8">
+              <p className="font-black text-xl mb-3 text-slate-800">How to vote:</p>
+              <ul className="list-disc pl-5 space-y-3 text-lg text-slate-700 font-medium">
+                <li><strong>Enter Your Name:</strong> Please enter your name at the top of the ballot.</li>
+                <li><strong>Review the List:</strong> Look through our current shopping list.</li>
+                <li><strong>Make a Choice:</strong> Tap <span className="text-green-700 font-black">✓ KEEP</span> or <span className="text-red-700 font-black">✕ DROP</span> for each item.</li>
+                <li><strong>Suggest Items:</strong> You may add items at the bottom. Enter the item, hit add item, and add more if needed. Then hit submit at the very bottom. Results will be posted at the next union meeting. </li>
+              </ul>
+            </div>
+
+            <button 
+              onClick={() => setView('vote')}
+              className="w-full bg-blue-600 text-white text-2xl font-black py-6 rounded-2xl transition-all shadow-xl hover:bg-blue-500 hover:shadow-2xl transform active:scale-[0.98]"
+            >
+              START VOTING
+            </button>
+          </div>
+        )}
 
         {/* --- VIEW: VOTING --- */}
         {view === 'vote' && (
@@ -143,7 +176,7 @@ export default function UnionShoppingApp() {
                 type="text" 
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
-                placeholder="Enter your full name" 
+                placeholder="Enter your name" 
                 className="w-full p-4 text-lg border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all shadow-sm"
               />
             </div>
@@ -191,14 +224,14 @@ export default function UnionShoppingApp() {
 
             <div className="mb-10 bg-slate-800 text-white p-5 rounded-2xl shadow-md">
               <h3 className="text-xl font-bold mb-2">Request New Items</h3>
-              <p className="text-sm text-slate-300 mb-4">Add items here to be voted on at the next union meeting.</p>
+              <p className="text-sm text-slate-300 mb-4">Add items here to be discussed at the next union meeting.</p>
               
               <form onSubmit={handleAddSuggestion} className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 mb-4">
                 <input 
                   type="text" 
                   value={newItemInput}
                   onChange={(e) => setNewItemInput(e.target.value)}
-                  placeholder="E.g., PAPER TOWELS" 
+                  placeholder="E.g., Better Coffee" 
                   className="flex-1 p-4 text-lg border-2 border-transparent rounded-xl text-slate-800 focus:ring-4 focus:ring-blue-500/50 outline-none"
                 />
                 <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-black text-lg hover:bg-blue-500 transition-colors">
